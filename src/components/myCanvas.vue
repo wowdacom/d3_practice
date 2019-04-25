@@ -3,6 +3,11 @@
     <svg @click="changeColor" width="200" height="200">
         <circle cx="100" cy="100" r="30"></circle>
     </svg>
+    <ul>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ul>
     <input type="text" id="text-input" v-model="color">
     <h1>Hello Canvas</h1>
     <div id="container"></div>    
@@ -22,7 +27,8 @@ export default {
   data () {
       return {
           insert: 50,
-          color: 'blue'
+          color: 'blue',
+          nodes: [1, 3, 4, 5, 10]
       }
   },
   props: {
@@ -30,6 +36,71 @@ export default {
   },
   mounted () {
 
+
+
+      var vm = this
+      var list = d3.select('ul')
+              
+        list.selectAll('ul > li')
+          .attr('width', '30px')
+          .attr('height', '30px')
+      
+      
+      // this.nodes.slice(0, 4)
+      // update()
+
+      function update () {
+
+        d3.range(10).forEach(function(el) {
+          vm.nodes.push({ value: el }); 
+        });
+
+          var updateSet = list.selectAll('ul > li')
+            .data(vm.nodes)
+            .style('width', '30px')
+            .style('height', '30px')
+            .style('border', 'solid 1px')
+            .style('margin', '10px')
+            .style('background-color', 'red')
+            
+          var exitSet = updateSet.exit()
+            .transition()
+            .duration(1000)
+            .delay(500)
+            .style('top', '10px')
+            .transition()
+            .duration(1000)
+            .delay(500)
+            .style('left', '20%')
+
+
+          var enterSet = updateSet.enter()
+            .append("li")
+            .style('position', 'relative')
+            .style('width', '30px')
+            .style('height', '30px')
+            .style('border', 'solid 1px')
+            .style('background-color', 'green')
+            .style('margin', '10px')  
+            .transition()
+            .duration(1000)
+            .delay(500)
+            .style('top', '-200px')
+            .transition()
+            .duration(1000)
+            .delay(500)
+            .style('left', '50%')
+
+          // var exitSet = updateSet.exit()
+          //   exitSet.text('移除 DOM 的部分')
+          //   .style('background-color', 'yellow')
+
+      }
+      update()
+      // vm.nodes = vm.nodes.slice(0, 3)
+      // update()
+
+      
       var data = [];
         d3.range(5000).forEach(function(el) {
         data.push({ value: el }); 
@@ -125,7 +196,10 @@ export default {
 
       },
       changeColor () {
-          d3.select('circle').style('fill', this.color)
+          d3.select('circle')
+            .transition()
+            .duration(1000)
+            .style('fill', this.color);
       }
   }
 }
@@ -141,6 +215,13 @@ export default {
  canvas {
     margin: auto 0;
     border: solid 1px green;
-}
+  }
+  ul {
+    list-style: none;
+    position: relative;
+  }
+  li {
+    
+  }
 }
 </style>
